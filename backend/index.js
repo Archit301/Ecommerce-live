@@ -10,6 +10,12 @@ app.use(cors())
 
 
 const PORT=7000;
+const MONGO="mongodb+srv://archit:1234@cluster0.gb71m.mongodb.net/"
+mongoose
+    .connect(MONGO)
+    .then(()=>{
+        console.log("Database is connected")
+    })
 
 const __dirname = path.resolve();
 app.listen(PORT,()=>{
