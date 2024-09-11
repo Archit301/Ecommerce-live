@@ -1,12 +1,11 @@
 import Wishlist from "../models/wishlist_model.js";
-import { io } from "../index.js";
+
 
 
 export const createWishlist=async(req,res)=>{
     try {
   const created=await new Wishlist(req.body)
         await created.save()
-        io.emit("wishlistUpdated", { action: "create", data: created });
         res.status(201).json(created) 
     } catch (error) {
         console.log(error);
@@ -30,7 +29,6 @@ export const updatebyid=async(req,res)=>{
     try {
         const {id}=req.params
         const updated=await Wishlist.findByIdAndUpdate(id,req.body,{new:true}).populate("product")
-        io.emit("wishlistUpdated", { action: "update", data: updated });
         res.status(200).json(updated)   
     } catch (error) {
         console.log(error);
@@ -46,7 +44,6 @@ export const deletebyid=async(req,res)=>{
             user,      // Replace userId with the actual user ID value
             product // Replace productId with the actual product ID value
           });
-        io.emit("wishlistUpdated", { action: "delete", data: deleted });
         return res.status(200).json("Succesfully remove the product from wishlist")
     } catch (error) {
         console.log(error);

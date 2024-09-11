@@ -1,5 +1,5 @@
 import Cart from "../models/cart_models.js";
-import { io } from "../index.js";
+
 
 
 
@@ -8,7 +8,6 @@ export const createorder=async(req,res)=>{
     try {
         const created=await new Cart(req.body).populate({path:"product"});
         await created.save()
-        io.emit("cartUpdated", created);
         res.status(201).json(created)
     } catch (error) {
         console.log(error);
@@ -50,7 +49,7 @@ export const updateById=async(req,res)=>{
     try {
         const {id}=req.params
         const updated=await Cart.findByIdAndUpdate(id,req.body,{new:true}).populate({path:"product"});
-        io.emit("cartUpdated", updated);
+     
         res.status(200).json(updated)
     } catch (error) {
         console.log(error);
@@ -65,7 +64,6 @@ export const deleteById=async(req,res)=>{
             user,      // Replace userId with the actual user ID value
             product // Replace productId with the actual product ID value
           });
-        io.emit("cartCleared", { user });
         res.status(200).json("Succesfully remove the product from cart")
     } catch (error) {
         console.log(error);

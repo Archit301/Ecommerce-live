@@ -1,6 +1,6 @@
 import Product from "../models/Product_models.js";
 import mongoose from 'mongoose';
-import { io } from '../index.js';
+
 
 
 export const CreateProduct=async(req,res,next)=>{
@@ -9,7 +9,6 @@ export const CreateProduct=async(req,res,next)=>{
     // const product= new Product({name,description,category,price,countInStock,status,userId,avatar})
     const product= new Product(req.body)
     await product.save()
-    io.emit('productCreated', product); 
     res.status(201).json("Product created Successfully")
     } catch (error) {
         next(error);
@@ -33,8 +32,7 @@ export const editProduct=async(req,res)=>{
       );
     if (!updatedproduct) {
         return res.status(404).json({ message: 'Product not found' });
-      }
-      io.emit('productUpdated', updatedproduct); 
+      } 
       //const { password, ...rest } = updatedUser._doc;  
       res.status(200).json(updatedproduct);
       } catch (error) {
@@ -56,7 +54,6 @@ export const editProduct=async(req,res)=>{
         return res.status(404).json({ message: 'Product not found' });
     }
     const result = await  Product.findByIdAndDelete(id);
-    io.emit('productDeleted', id);
     res.status(200).json({ message: 'Product has been deleted' });
 } catch (error) {
     console.error('Error updating user:', error);

@@ -1,12 +1,11 @@
 import Feedback from "../models/feedback_model.js";
-import { io } from '../index.js';
+
 
 export const createfeedback=async(req,res)=>{
     try {
 
         const created=await new Feedback(req.body).populate({path:'user',select:"-password"})
         await created.save()
-        io.emit('feedbackCreated', created);
         res.status(201).json(created)   
     } catch (error) {
         console.log(error);
@@ -33,7 +32,6 @@ export const  updateById=async(req,res)=>{
     try {
         const {id}=req.params
         const updated=await Feedback.findByIdAndUpdate(id,req.body,{new:true}).populate('user')
-        io.emit('feedbackUpdated', updated);
         res.status(200).json(updated)
     } catch (error) {
         console.log(error);
@@ -45,7 +43,6 @@ export const deleteById=async(req,res)=>{
     try {
         const {id}=req.params
         const deleted=await Feedback.findByIdAndDelete(id)
-        io.emit('feedbackDeleted', id); 
         res.status(200).json(deleted)
     } catch (error) {
         console.log(error);
